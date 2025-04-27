@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Button, ButtonGroup, Input, Layout, Text, useTheme } from '@ui-kitten/components';
+import { Button, ButtonGroup, Input, Layout, useTheme } from '@ui-kitten/components';
 import { Formik } from 'formik';
 
 import { MainLayout } from '../../layouts/MainLayout';
@@ -15,6 +15,7 @@ import { MyIcon } from '../../components/ui/MyIcon';
 
 import { ProductImages } from '../../components/products/ProductImages';
 import { genders, sizes } from '../../../config/constants/constants';
+import { CameraAdapter } from '../../../config/adapters/camera-adapter';
 
 
 interface Props extends StackScreenProps<RootStackParams,'ProductScreen'>{}
@@ -61,6 +62,14 @@ export const ProductScreen = ( { route }: Props ) => {
                     <MainLayout
                         title={ values.title }
                         subtitle={`Precio: ${ values.price }`}
+                        rightAction={ async () => {
+                            
+                            // const photos = await CameraAdapter.takePicture(); // Sirve para tomar fotos
+                            const photos = await CameraAdapter.getPicturesFromLibrary();
+                            setFieldValue('images', [...values.images, ...photos]);
+                            
+                        }}
+                        rightActionIcon='image-outline'
                     >
                         <ScrollView style={{ flex: 1 }}>
                             <Layout style={{ marginVertical: 10, justifyContent: 'center', alignItems: 'center' }}>
@@ -165,7 +174,6 @@ export const ProductScreen = ( { route }: Props ) => {
                             >
                                 Guardar
                             </Button>
-
 
                             <Layout style={{ height: 200 }} />
 
